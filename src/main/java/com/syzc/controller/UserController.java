@@ -1,11 +1,15 @@
 package com.syzc.controller;
 
+import com.baidu.aip.nlp.AipNlp;
 import com.jfinal.core.Controller;
 import com.jfinal.core.paragetter.Para;
 import com.jfinal.kit.HashKit;
 import com.syzc.Kit.BaseResponse;
 import com.syzc.model.User;
 import com.syzc.service.UserService;
+import org.json.JSONObject;
+
+import java.util.HashMap;
 
 /**
  * @author xueli
@@ -17,7 +21,23 @@ public class UserController extends Controller {
     BaseResponse baseResponse = new BaseResponse();
     UserService userService = new UserService();
     public void index() {
-        renderText("hello depression");
+        String APP_ID = "25686837";
+        String API_KEY = "l4WkRnFqSZjFmIGxAMKu9SwF";
+        String  SECRET_KEY = "sVzezpqTpMRx836oYt5ood0q8uNv0vh9";
+
+        AipNlp client = new AipNlp(APP_ID, API_KEY,SECRET_KEY);
+        client.setConnectionTimeoutInMillis(2000);
+        client.setSocketTimeoutInMillis(60000);
+
+        // 调用接口
+        String text = "百度是一家高科技公司";
+        HashMap<String, Object> options = new HashMap<String, Object>();
+
+        // 情感倾向分析
+        JSONObject res = client.sentimentClassify(text, options);
+        System.out.println(res.toString(2));
+        System.out.println(res.getJSONArray("items").getJSONObject(0).get("sentiment").toString());
+
     }
 
     /**
